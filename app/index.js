@@ -31,6 +31,15 @@ function computeDomain(data, key) {
     .attr("class", "tooltip")       
     .style("opacity", 0);
 
+function filterJSON(json, variable, year){ //do i need to change json here to combined[1]
+      var result = [];
+  json.forEach( function(val, idx, arr){ //what is val here? idx?arr? //they are the only time it comes up
+    if(val.name == location){
+      result.push(val[dim])}
+  })
+  return result[0];
+}
+
 function myVis(ntaShapes, ntaValues) {
   console.log(ntaShapes, ntaValues)
   // this is an es6ism called a destructuring, it allows you to save and name argument
@@ -74,7 +83,7 @@ function myVis(ntaShapes, ntaValues) {
     .attr('width', width)
     .attr('height', height)
     .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+    .attr('transform', `translate(${margin.left},${margin.top})`);
 
     svg.append("text")
       .attr("y", height/50)
@@ -82,36 +91,34 @@ function myVis(ntaShapes, ntaValues) {
       .style("text-anchor", "middle")
       .text("Visualizing HMDA Data in New York City");
 
-      svg.append("rect")
-                .attr("x", width/2 -150)
-                .attr("y", (height/3) + 20)
-                .attr("width", 10)
-                .attr("height", 10)
-                .attr("fill", "blue"); //MAKE A LEDEND - will need to be able to change (so put in function)
-
   // finally we construct our rendered states
-  console.log(svg)
+  console.log(svg);
+
+console.log(ntaValues[1].ntacode);
+
   const join = svg.selectAll('.ntacode')
-    .data(ntaShapes.features)
-  console.log(join, ntaShapes.features)
+    .data(ntaShapes.features);
+  
+  console.log(join, ntaShapes.features);
+  
   join.enter()
     .append('path')
       .attr('class', 'ntacode')
       .attr('stroke', 'black')
       .attr('fill', d => colorScale(ntaNameToInc[d.properties.ntacode]))
-      .attr('d', d => geoGenerator(d));
-      // .on("mouseover", function(d) {    
-      //       div.transition()    
-      //           .duration(200)    
-      //           .style("opacity", .9);    
-      //       div .html(d.properties.ntacode)  
-      //           .style("left", (d3.event.pageX) + "px")   
-      //           .style("top", (d3.event.pageY - 28) + "px");  
-      //       })          
-      //   .on("mouseout", function(d) {   
-      //       div.transition()    
-      //           .duration(500)    
-      //           .style("opacity", 0); 
-      //   });
+      .attr('d', d => geoGenerator(d))
+      .on("mouseover", function(d) {    //this does NOT WORK
+            div.transition()    
+                .duration(200)    
+                .style("opacity", .9);    
+            div.html(d.ntacode)  //I think this needs to be a function that return the inc for each polygon
+                .style("left", (d3.event.pageX) + "px")   
+                .style("top", (d3.event.pageY - 28) + "px");  
+            })          
+        .on("mouseout", function(d) {   
+            div.transition()    
+                .duration(500)    
+                .style("opacity", 0); 
+        });
 
 }
