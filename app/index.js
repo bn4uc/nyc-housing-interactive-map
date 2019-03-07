@@ -1,12 +1,5 @@
 console.log("H")
 
-// if the data you are going to import is small, then you can import it using es6 import
-// import MY_DATA from './app/data/example.json'
-// (I tend to think it's best to use screaming snake case for imported json)
-//const domReady = require('domready');
-
-//domReady(() => {
-  // this is just one example of how to import data. there are lots of ways to do it!
   Promise.all([
     fetch(
       'data/nta-clean.json'
@@ -16,7 +9,22 @@ console.log("H")
      ).then(data => data.json()),
   ]).then(combined => myVis(combined[0], combined[1])); 
 
-//});
+
+  d3.csv("dropdown_options.csv").then(function(dataset) {
+     console.log(dataset);
+console.log(dataset[1].text);
+     d3.select("#dropdown")
+          .selectAll("option")
+          .data(dataset)
+          .enter()
+          .append("option")
+          .attr("value", function(option) {return option.value; }) //{ for (i=0; i <= d.length; i++) { return d.[i].leaves + "px" ;});
+          .text(function(option) { return option.text; });
+
+            })
+            .catch(error => {
+                console.log("Error")
+            });
 
 function computeDomain(data, key) {
   return data.reduce((acc, row) => {
@@ -27,21 +35,22 @@ function computeDomain(data, key) {
   }, {min: Infinity, max: -Infinity});
 }
 
-  var div = d3.select("body").append("div") 
+var div = d3.select("body").append("div") //does not work
     .attr("class", "tooltip")       
     .style("opacity", 0);
 
-function filterJSON(json, variable, year){ //do i need to change json here to combined[1]
-      var result = [];
-  json.forEach( function(val, idx, arr){ //what is val here? idx?arr? //they are the only time it comes up
-    if(val.name == location){
-      result.push(val[dim])}
-  })
-  return result[0];
-}
+d3.select("#dropdown") //this does NOT work and I do not know why - the console has access to dropdown_options, but also has error
+          .selectAll("option")
+          .data(dropdown_options) //i tried putting this in the .js and it didnt help, so its issue with code
+          .enter()
+          .append("option")
+          .attr("value", function(option) {return option.value; })
+          .text(function(option) { return option.text; });
+
 
 function myVis(ntaShapes, ntaValues) {
   console.log(ntaShapes, ntaValues)
+
   // this is an es6ism called a destructuring, it allows you to save and name argument
   // you tend to see it for stuff in object, (as opposed to arrays), but this is cool too
   // const [stateShapes, statePops] = data;
@@ -67,6 +76,7 @@ function myVis(ntaShapes, ntaValues) {
     const row = ntaValues[i];
     ntaNameToInc[row.ntacode] = row.avg_inc;
   }
+console.log(ntaNameToInc);
 
   const incScale = d3.scaleLinear().domain([0, incDomain.max]).range([0, 1]);
   const colorScale = d => d3.interpolateInferno(Math.sqrt(incScale(d)));
@@ -93,8 +103,6 @@ function myVis(ntaShapes, ntaValues) {
 
   // finally we construct our rendered states
   console.log(svg);
-
-console.log(ntaValues[1].ntacode);
 
   const join = svg.selectAll('.ntacode')
     .data(ntaShapes.features);
