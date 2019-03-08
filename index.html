@@ -11,12 +11,15 @@
 </head>
 <body>
   <svg class="vis-container"></svg>
-  <select id="dropdown"></select>
+  <select id="dropdown"></select> <!--understanding of using dropdown and buttons from http://bl.ocks.org/feyderm/e6cab5931755897c2eb377ccbf9fdf18-->
+  <div id = "tooltip"></div>
 
 </body>
 <form id="dimensions">
   <input  type='radio' id="avg_inc" name="mode" checked>Average Income</input>
   <input type='radio' id="avg_loan_amount" name="mode">Average Loan Amount</input>
 	<input type='radio' id="loan_to_inc" name="mode">Average Loan-to-Income Ratio</input>
+  <input type='radio' id="approval_rate" name="mode">Approval Rate</input>
+  <input type='radio' id="denial_rate" name="mode">Denial Rate</input>
 </form>
 </html>
