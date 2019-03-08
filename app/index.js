@@ -12,19 +12,18 @@ console.log("H")
 
   d3.csv("dropdown_options.csv").then(function(dataset) {
      console.log(dataset);
-console.log(dataset[1].text);
-     d3.select("#dropdown")
+        d3.select("#dropdown")
           .selectAll("option")
           .data(dataset)
           .enter()
           .append("option")
-          .attr("value", function(option) {return option.value; }) //{ for (i=0; i <= d.length; i++) { return d.[i].leaves + "px" ;});
-          .text(function(option) { return option.text; });
-
+          .attr("value", function(dataset){return dataset.value;})
+          .text(function(dataset){return dataset.text;});
             })
             .catch(error => {
-                console.log("Error")
+                console.log("Error") //how can i get an error here and print console.log(dataset?????)
             });
+
 
 function computeDomain(data, key) {
   return data.reduce((acc, row) => {
@@ -38,14 +37,6 @@ function computeDomain(data, key) {
 var div = d3.select("body").append("div") //does not work
     .attr("class", "tooltip")       
     .style("opacity", 0);
-
-d3.select("#dropdown") //this does NOT work and I do not know why - the console has access to dropdown_options, but also has error
-          .selectAll("option")
-          .data(dropdown_options) //i tried putting this in the .js and it didnt help, so its issue with code
-          .enter()
-          .append("option")
-          .attr("value", function(option) {return option.value; })
-          .text(function(option) { return option.text; });
 
 
 function myVis(ntaShapes, ntaValues) {
