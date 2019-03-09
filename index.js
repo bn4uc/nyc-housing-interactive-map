@@ -149,7 +149,7 @@ var selectedVar = 'avg_inc'
     bottom: 10
   };
 
-const varDomain = computeDomain(selectedData, "avg_inc");
+const varDomain = computeDomain(selectedData, selectedVar); //this works with selectedVar
 console.log(varDomain);
 
 const varScale = d3.scaleLinear().domain([0, varDomain.max]).range([0, 1]);
@@ -178,11 +178,17 @@ const svg = d3.select('.vis-container')
       .style("text-anchor", "middle")
       .text("Visualizing HMDA Data in New York City");
 
+    svg.append("text")
+      .attr("y", height/30 + 50)
+      .attr("x", width/5 )             
+      .style("text-anchor", "middle")
+      .text("Neighborhood Tabulation Area: ");
+
 
 
 console.log(selectedData); //once changed this is just a name??? but when we have the equals above, it treats it as data
 
-  function updateFunction(selectedData) {
+  function updateFunction(selectedData, selectedVar) {
 
 console.log(svg);
 
@@ -193,13 +199,24 @@ console.log(join, ntaShapes.features);
 
 
 console.log(selectedData); //this is updated, but just in name, not with the json
-const ntaNameToVar = {}; //need to be general ntaNameToVar
+const ntaNameToVar = {}; 
   for (let i = 0; i < selectedData.length; i++){
         const row = selectedData[i];
-        ntaNameToVar[row.ntacode] = row.avg_inc; //need to generalize this somehow so it fills with variable choice
+        ntaNameToVar[row.ntacode] = row.avg_inc; //need to generalize but this doesnt work as selectedVar
       }
     console.log(ntaNameToVar);
 
+function showTooltip(d){ //this does not work to make both things show up 
+  d3.select(div)
+    .transition()
+    .duration(200)
+    .style("opacity, .9")
+  d3.select(div)
+    .text(d.properties.ntaname)
+  d3.select(div)
+    .text(ntaNameToVar[d.properties.ntacode]);
+
+}
 
     //THIS IS WORKING DO NOT TOUCH FIRST 6 lines  
     join.enter()
@@ -209,15 +226,15 @@ const ntaNameToVar = {}; //need to be general ntaNameToVar
       .attr('d', d => geoGenerator(d))
       .merge(join)
         .attr('fill', d => colorScale(ntaNameToVar[d.properties.ntacode]))
-        //.call(updateFill, selectedData) //throws error here, but also goes back to ln 49 and prints new chosen dropdown, then tries to run myvis
-        .on("mouseover", function(d) {    //this does NOT WORK
+        .on("mouseover", function(d) { 
           div.transition()    
             .duration(200)    
             .style("opacity", .9);    
-          div.text(d.properties.ntaname)  //I think this needs to be a function that return the inc for each polygon
-            .style("left", (d3.event.pageX) + "px")   
-            .style("top", (d3.event.pageY - 28) + "px"); 
-         
+          div.text(d.properties.ntaname)  //need to add the number for each of these ntaNameToVar[d.properties.ntacode])
+            .style("left", width/5 + 140 + "px")   
+            .style("top", height/30 + 53 + "px") 
+         // .style("left", (d3.event.pageX) + "px")   
+         // .style("top", (d3.event.pageY - 28) + "px");
         })          
         .on("mouseout", function(d) {   
           div.transition()    
@@ -235,7 +252,7 @@ const ntaNameToVar = {}; //need to be general ntaNameToVar
     updateFunction(selectedData); //maybe this is stored as a string and thus not triggering name of dataset
   }); 
   // this is the first call to the update
-  updateFunction(selectedData);
+ 
 
   var buttons = d3.select("#dimensions");
 
@@ -245,7 +262,7 @@ const ntaNameToVar = {}; //need to be general ntaNameToVar
     console.log(selectedVar);
   }); 
   // this is the first call to the update
-  //updateFunction([]);
+  updateFunction(selectedData, selectedVar);
 }
 
 
