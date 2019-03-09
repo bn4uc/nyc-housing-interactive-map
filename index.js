@@ -14,6 +14,8 @@ console.log("Huuuu")
 //   ]).then(combined => myVis(combined[0], combined[1])); 
 
 
+//NEED TO REMOVE PARKS AND CEMETERIES
+
 Promise.all([
   'data/nta-clean.json', 
   'data/hmda_per_nta.json', 
@@ -48,6 +50,39 @@ Promise.all([
       console.log("Error");
     });
 
+// Promise.all([
+//   'jsons_for_map/nta-clean.json', 
+//   'jsons_for_map/hmda_per_nta.json', 
+//   'jsons_for_map/hmda_nta_general_2013.json', 
+//   'jsons_for_map/hmda_nta_general_2014.json', 
+//   'jsons_for_map/hmda_nta_general_2015.json', 
+//   'jsons_for_map/hmda_nta_general_2016.json', 
+//   'jsons_for_map/hmda_nta_general_2017.json',
+//   'jsons_for_map/hmda_nta_asian_2013.json', 
+//   'jsons_for_map/hmda_nta_asian_2014.json', 
+//   'jsons_for_map/hmda_nta_asian_2015.json', 
+//   'jsons_for_map/hmda_nta_asian_2016.json', 
+//   'jsons_for_map/hmda_nta_asian_2017.json', 
+//   'jsons_for_map/hmda_nta_black_2013.json', 
+//   'jsons_for_map/hmda_nta_black_2014.json', 
+//   'jsons_for_map/hmda_nta_black_2015.json', 
+//   'jsons_for_map/hmda_nta_black_2016.json', 
+//   'jsons_for_map/hmda_nta_black_2017.json', 
+//   'jsons_for_map/hmda_nta_white_2013.json', 
+//   'jsons_for_map/hmda_nta_white_2014.json', 
+//   'jsons_for_map/hmda_nta_white_2015.json', 
+//   'jsons_for_map/hmda_nta_white_2016.json', 
+//   'jsons_for_map/hmda_nta_white_2017.json', 
+//   'jsons_for_map/hmda_nta_other_2013.json', 
+//   'jsons_for_map/hmda_nta_other_2014.json', 
+//   'jsons_for_map/hmda_nta_other_2015.json', 
+//   'jsons_for_map/hmda_nta_other_2016.json', 
+//   'jsons_for_map/hmda_nta_other_2017.json'
+//   ].map(url => fetch(url).then(data => data.json())))
+//     .then(data => myVis(data))
+//     .catch(function(error){
+//       console.log("Error");
+//     });
  
 
 
@@ -76,7 +111,6 @@ function computeDomain(data, key) {
 
 
 
-
 function myVis(data) { //maybe this should be ntaShapes, and selectedData (but we must load it first)
   
 
@@ -98,11 +132,11 @@ hmda_nta_other_2015, hmda_nta_other_2016, hmda_nta_other_2017
 ] = data;
 
 var selectedData = hmda_nta_general_2013; //give it something to start with (should this be a csv)
-
-  console.log(selectedData); //this works
+console.log(selectedData); //this works, but doesnt change 
+var selectedVar = 'avg_inc'
 
   var div = d3.select("body") //trying to create a tooltip! 
-    .append("div") //does not work
+    .append("div") 
     .attr("class", "tooltip")       
     .style("opacity", 0);
 
@@ -115,14 +149,7 @@ var selectedData = hmda_nta_general_2013; //give it something to start with (sho
     bottom: 10
   };
 
-
-// const ntaNameToVar = {}; //need to be general ntaNameToVar
-//   for (let i = 0; i < selectedData.length; i++) {
-//     const row = selectedData[i];
-//     ntaNameToVar[row.ntacode] = row.button_choice; //need this to be the chosen variable, from button
-//   }
-// console.log(ntaNameToVar);
-const varDomain = computeDomain(selectedData, 'avg_inc');
+const varDomain = computeDomain(selectedData, "avg_inc");
 console.log(varDomain);
 
 const varScale = d3.scaleLinear().domain([0, varDomain.max]).range([0, 1]);
@@ -153,7 +180,7 @@ const svg = d3.select('.vis-container')
 
 
 
-console.log(selectedData);
+console.log(selectedData); //once changed this is just a name??? but when we have the equals above, it treats it as data
 
   function updateFunction(selectedData) {
 
@@ -165,7 +192,7 @@ const join = svg.selectAll('.ntacode')
 console.log(join, ntaShapes.features);
 
 
-console.log(selectedData);
+console.log(selectedData); //this is updated, but just in name, not with the json
 const ntaNameToVar = {}; //need to be general ntaNameToVar
   for (let i = 0; i < selectedData.length; i++){
         const row = selectedData[i];
@@ -187,9 +214,10 @@ const ntaNameToVar = {}; //need to be general ntaNameToVar
           div.transition()    
             .duration(200)    
             .style("opacity", .9);    
-          div.html(d.properties.ntaname)  //I think this needs to be a function that return the inc for each polygon
+          div.text(d.properties.ntaname)  //I think this needs to be a function that return the inc for each polygon
             .style("left", (d3.event.pageX) + "px")   
-            .style("top", (d3.event.pageY - 28) + "px");  
+            .style("top", (d3.event.pageY - 28) + "px"); 
+         
         })          
         .on("mouseout", function(d) {   
           div.transition()    
@@ -202,12 +230,22 @@ const ntaNameToVar = {}; //need to be general ntaNameToVar
 
   dropDown.on("change", function() {
     checked = true;
-    selectedData = d3.event.target.value;
+    selectedData = d3.event.target.value; //this is pulling the value, but then I need it to recognize as name of data
     console.log(selectedData);
-    updateFunction(selectedData); 
+    updateFunction(selectedData); //maybe this is stored as a string and thus not triggering name of dataset
   }); 
   // this is the first call to the update
   updateFunction(selectedData);
+
+  var buttons = d3.select("#dimensions");
+
+  buttons.on("change", function() {
+    checked = true;
+    selectedVar = d3.event.target.id; //this is pulling the value, but then I need it to recognize as name of data
+    console.log(selectedVar);
+  }); 
+  // this is the first call to the update
+  //updateFunction([]);
 }
 
 
