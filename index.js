@@ -15,7 +15,6 @@ console.log("Huuuu")
 //   ]).then(combined => myVis(combined[0], combined[1])); 
 
 
-//NEED TO REMOVE PARKS AND CEMETERIES
 
 Promise.all([
   'data/nta-clean.json', 
@@ -125,6 +124,9 @@ hmda_nta_other_2013, hmda_nta_other_2014,
 hmda_nta_other_2015, hmda_nta_other_2016, hmda_nta_other_2017
 ] = data;
 
+//var dataDict = [{"varName": "General - 2013", "dataset": hmda_nta_general_2013}, {"varName": "General - 2014", "dataset": hmda_nta_general_2014}, 
+//{"varName": }] //do i need this to make selectedData access the actual data?? 
+
 var selectedData = hmda_nta_general_2013; //this is working --give it something to start with (should this be a csv)
 
 var selectedVar = 'avg_loan_amount' //this is needed, but doesnt update
@@ -180,17 +182,19 @@ const svg = d3.select('.vis-container')
       .style("text-anchor", "right")
       .text("Neighborhood Tabulation Area (NTA): ");
 
-    svg.append("text")
-      .attr("y", height/30 + 80)
-      .attr("x", width/5 -100)             
-      .style("text-anchor", "right")
-      .text(prettyVar + ": ");
+
 
 
 
 console.log(selectedData); //once changed this is just a name??? but when we have the equals above, it treats it as data
 
-  function updateFunction(selectedData, selectedVar) {
+  function updateFunction(selectedData, selectedVar, prettyVar) {
+
+      svg.append("text")
+      .attr("y", height/30 + 80)
+      .attr("x", width/5 -100)             
+      .style("text-anchor", "right")
+      .text(prettyVar + ": ");
 
 const varDomain = computeDomain(selectedData, selectedVar); //this works with selectedVar and changes the domain, but the ntaNametoVar still uses avg_inc
 console.log(varDomain);
@@ -296,7 +300,7 @@ const ntaNameToVar = {};
     console.log(prettyVar);
     selectedVar = d3.event.target.id; //this is pulling the value, but then I need it to recognize as name of data
     console.log(selectedVar);
-    updateFunction(selectedData, selectedVar); //this works to recall, but need to use selectedVar above!!
+    updateFunction(selectedData, selectedVar, prettyVar); //this works to recall, but need to use selectedVar above!!
      }); 
 
   var dropDown = d3.select("#dropdown");
@@ -305,11 +309,11 @@ const ntaNameToVar = {};
     checked = true;
     selectedData = d3.event.target.value; //this is pulling the value, but then I need it to recognize as name of data
     console.log(selectedData);
-    updateFunction(selectedData, selectedVar); //maybe this is stored as a string and thus not triggering name of dataset
+    updateFunction(selectedData, selectedVar, prettyVar); //maybe this is stored as a string and thus not triggering name of dataset
   }); 
 
   // this is the first call to the update
-  updateFunction(selectedData, selectedVar);
+  updateFunction(selectedData, selectedVar, prettyVar);
 }
 
 
