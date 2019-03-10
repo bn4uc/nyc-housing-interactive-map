@@ -2,6 +2,7 @@ console.log("Huuuu")
 
 //code altered from http://bl.ocks.org/feyderm/e6cab5931755897c2eb377ccbf9fdf18
 //and https://github.com/mcnuttandrew/capp-30239/tree/master/week-8-map/soln
+//and https://d3-legend.susielu.com/#color-examples
 
 
 // Promise.all([
@@ -100,14 +101,7 @@ d3.csv("dropdown_options.csv").then(function(dataset) { //loading in the csv for
                 console.log("Error")
             });
 
-function computeDomain(data, key) {
-  return data.reduce((acc, row) => {
-    return {
-      min: Math.min(acc.min, row[key]),
-      max: Math.max(acc.max, row[key])
-    };
-  }, {min: Infinity, max: -Infinity});
-}
+
 
 
 
@@ -131,9 +125,9 @@ hmda_nta_other_2013, hmda_nta_other_2014,
 hmda_nta_other_2015, hmda_nta_other_2016, hmda_nta_other_2017
 ] = data;
 
-var selectedData = hmda_nta_general_2013; //give it something to start with (should this be a csv)
-console.log(selectedData); //this works, but doesnt change 
-var selectedVar = 'avg_inc'
+var selectedData = hmda_nta_general_2013; //this is working --give it something to start with (should this be a csv)
+
+var selectedVar = 'avg_inc' //this is needed, but doesnt update
 
   var div = d3.select("body") //trying to create a tooltip! 
     .append("div") 
@@ -149,16 +143,14 @@ var selectedVar = 'avg_inc'
     bottom: 10
   };
 
-const varDomain = computeDomain(selectedData, selectedVar); //this works with selectedVar
-console.log(varDomain);
-
-const varScale = d3.scaleLinear().domain([0, varDomain.max]).range([0, 1]);
-
-
-const colorScale = d => d3.interpolateInferno(Math.sqrt(varScale(d))); //need to figure out how to make a legend for this
-
-var colorLegend = d3.scaleSequential(d3.interpolateInferno)
-  .domain([0, 20]);
+function computeDomain(data, key) {
+  return data.reduce((acc, row) => { //this is where the dropdown update gets stuck because it isnt a dataset
+    return {
+      min: Math.min(acc.min, row[key]),
+      max: Math.max(acc.max, row[key])
+    };
+  }, {min: Infinity, max: -Infinity});
+}
 
 var projection = d3.geoAlbers()
             .scale(70000)
@@ -192,6 +184,41 @@ console.log(selectedData); //once changed this is just a name??? but when we hav
 
   function updateFunction(selectedData, selectedVar) {
 
+const varDomain = computeDomain(selectedData, selectedVar); //this works with selectedVar and changes the domain, but the ntaNametoVar still uses avg_inc
+console.log(varDomain);
+
+const varScale = d3.scaleLinear().domain([0, varDomain.max]).range([0, 1]);
+
+const colorScale = d => d3.interpolateInferno(Math.sqrt(varScale(d)));
+
+const colorScaleTry = d3.scaleLinear().domain([0, varDomain.max]).range(d3.range(9).map(function(d){
+  return d3.interpolateInferno(Math.sqrt(varScale(d)))
+})); //attempt 
+
+// COLOR LEGEND - code from https://d3-legend.susielu.com/#color-examples
+
+// var linear = d3.scaleLinear() //this is what they use on line 212 in .scale()
+//   .domain([0,10])
+//   .range(["rgb(46, 73, 123)", "rgb(71, 187, 94)"]);
+
+var svg2 = d3.select("svg");
+
+svg2.append("g")
+  .attr("class", "legendLinear")
+  .attr("transform", "translate(110,150)");
+
+var legend = d3.legendColor()
+  .labelFormat(d3.format(".2f"))
+  .useClass(true)
+  .title("Color Legend") //how to get this to be the name of the button that is checked
+  .titleWidth(100)
+  .scale(varScale); //need to use something here that has colors and numbers - colorScale should work but doesnt have numbers i think 
+
+svg2.select(".legendLinear")
+  .call(legend);
+
+  //END LEGEND 
+
 console.log(svg);
 
 const join = svg.selectAll('.ntacode')
@@ -199,32 +226,20 @@ const join = svg.selectAll('.ntacode')
   
 console.log(join, ntaShapes.features);
 
-
-console.log(selectedData); //this is updated, but just in name, not with the json
+console.log(selectedData); //this is updated, but just in name, not with the json!!!!
 const ntaNameToVar = {}; 
   for (let i = 0; i < selectedData.length; i++){
         const row = selectedData[i];
-        ntaNameToVar[row.ntacode] = row.avg_inc; //need to generalize but this doesnt work as selectedVar
+        ntaNameToVar[row.ntacode] = row.avg_inc; //need to generalize but this doesnt work as selectedVar!!!!
       }
     console.log(ntaNameToVar);
 
-function showTooltip(d){ //this does not work to make both things show up 
-  d3.select(div)
-    .transition()
-    .duration(200)
-    .style("opacity, .9")
-  d3.select(div)
-    .text(d.properties.ntaname)
-  d3.select(div)
-    .text(ntaNameToVar[d.properties.ntacode]);
-
-}
 
     //THIS IS WORKING DO NOT TOUCH FIRST 6 lines  
     join.enter()
       .append('path')
       .attr('class', 'ntacode')
-      .attr('stroke', 'black')
+      .attr('stroke', 'black')  //how to do like if na then fill = grey??
       .attr('d', d => geoGenerator(d))
       .merge(join)
         .attr('fill', d => colorScale(ntaNameToVar[d.properties.ntacode]))
@@ -233,11 +248,11 @@ function showTooltip(d){ //this does not work to make both things show up
             .duration(200)    
             .style("opacity", .9);    
           div.text(d.properties.ntaname)
-          //.text(ntaNameToVar[d.properties.ntacode])  //need to add the number for each of these ntaNameToVar[d.properties.ntacode])
             .style("left", width/5 + 140 + "px")   
-            .style("top", height/30 + 53 + "px") 
-         // .style("left", (d3.event.pageX) + "px")   
-         // .style("top", (d3.event.pageY - 28) + "px");
+            .style("top", height/30 + 53 + "px");
+          div.text(ntaNameToVar[d.properties.ntacode]) //this is still avg income only
+            .style("left", width/5 + 140 + "px")   
+            .style("top", height/30 + 53 + "px");
         })          
         .on("mouseout", function(d) {   
           div.transition()    
@@ -245,23 +260,24 @@ function showTooltip(d){ //this does not work to make both things show up
           .style("opacity", 0); 
         });
   }
- 
+   var buttons = d3.select("#dimensions");
+
+  buttons.on("change", function() {
+    checked = true;
+    selectedVar = d3.event.target.id; //this is pulling the value, but then I need it to recognize as name of data
+    console.log(selectedVar);
+    updateFunction(selectedData, selectedVar); //this works to recall, but need to use selectedVar above!!
+     }); 
+
   var dropDown = d3.select("#dropdown");
 
   dropDown.on("change", function() {
     checked = true;
     selectedData = d3.event.target.value; //this is pulling the value, but then I need it to recognize as name of data
     console.log(selectedData);
-    updateFunction(selectedData); //maybe this is stored as a string and thus not triggering name of dataset
+    updateFunction(selectedData, selectedVar); //maybe this is stored as a string and thus not triggering name of dataset
   }); 
 
-  var buttons = d3.select("#dimensions");
-
-  buttons.on("change", function() {
-    checked = true;
-    selectedVar = d3.event.target.id; //this is pulling the value, but then I need it to recognize as name of data
-    console.log(selectedVar);
-  }); 
   // this is the first call to the update
   updateFunction(selectedData, selectedVar);
 }
