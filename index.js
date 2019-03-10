@@ -127,7 +127,9 @@ hmda_nta_other_2015, hmda_nta_other_2016, hmda_nta_other_2017
 
 var selectedData = hmda_nta_general_2013; //this is working --give it something to start with (should this be a csv)
 
-var selectedVar = 'avg_inc' //this is needed, but doesnt update
+var selectedVar = 'avg_loan_amount' //this is needed, but doesnt update
+
+var prettyVar = "Average Loan Amount";
 
   var div = d3.select("body") //trying to create a tooltip! 
     .append("div") 
@@ -174,9 +176,15 @@ const svg = d3.select('.vis-container')
 
     svg.append("text")
       .attr("y", height/30 + 50)
-      .attr("x", width/5 )             
-      .style("text-anchor", "middle")
-      .text("Neighborhood Tabulation Area: ");
+      .attr("x", width/5 -100)             
+      .style("text-anchor", "right")
+      .text("Neighborhood Tabulation Area (NTA): ");
+
+    svg.append("text")
+      .attr("y", height/30 + 80)
+      .attr("x", width/5 -100)             
+      .style("text-anchor", "right")
+      .text(prettyVar + ": ");
 
 
 
@@ -189,16 +197,12 @@ console.log(varDomain);
 
 const varScale = d3.scaleLinear().domain([0, varDomain.max]).range([0, 1]);
 
-const colorScale = d => d3.interpolateInferno(Math.sqrt(varScale(d)));
-
-const colorScaleTry = d3.scaleLinear().domain([0, varDomain.max]).range(d3.range(9).map(function(d){
-  return d3.interpolateInferno(Math.sqrt(varScale(d)))
-})); //attempt 
+const colorScale = d => d3.interpolateYlOrRd(Math.sqrt(varScale(d)));
 
 // COLOR LEGEND - code from https://d3-legend.susielu.com/#color-examples
 
-// var linear = d3.scaleLinear() //this is what they use on line 212 in .scale()
-//   .domain([0,10])
+// var linear = d3.scaleLinear() //this is what they use on in .scale()
+//   .domain([0,varDomain.max])
 //   .range(["rgb(46, 73, 123)", "rgb(71, 187, 94)"]);
 
 var svg2 = d3.select("svg");
@@ -219,6 +223,30 @@ svg2.select(".legendLinear")
 
   //END LEGEND 
 
+  //color legend with different color scale -- doesnt work to add color 
+
+// var quantize = d3.scaleQuantize()
+//   .domain([ 0, varDomain.max])
+//   .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+
+// var svg2 = d3.select("svg");
+
+// svg2.append("g")
+//   .attr("class", "legendQuant")
+//   .attr("transform", "translate(20,20)");
+
+// var legend = d3.legendColor()
+//   .labelFormat(d3.format(".2f"))
+//   .useClass(true)
+//   .title("A title")
+//   .titleWidth(100)
+//   .scale(quantize);
+
+// svg2.select(".legendQuant")
+//   .call(legend);
+
+  ////end color legend attempt 
+
 console.log(svg);
 
 const join = svg.selectAll('.ntacode')
@@ -230,7 +258,7 @@ console.log(selectedData); //this is updated, but just in name, not with the jso
 const ntaNameToVar = {}; 
   for (let i = 0; i < selectedData.length; i++){
         const row = selectedData[i];
-        ntaNameToVar[row.ntacode] = row.avg_inc; //need to generalize but this doesnt work as selectedVar!!!!
+        ntaNameToVar[row.ntacode] = row.avg_loan_amount; //need to generalize but this doesnt work as selectedVar!!!!
       }
     console.log(ntaNameToVar);
 
@@ -242,17 +270,17 @@ const ntaNameToVar = {};
       .attr('stroke', 'black')  //how to do like if na then fill = grey??
       .attr('d', d => geoGenerator(d))
       .merge(join)
-        .attr('fill', d => colorScale(ntaNameToVar[d.properties.ntacode]))
+        .attr('fill', d => colorScale(ntaNameToVar[d.properties.ntacode])) //this doesnt change with selectedVar, thats why color gets screwed up
         .on("mouseover", function(d) { 
           div.transition()    
             .duration(200)    
             .style("opacity", .9);    
-          div.text(d.properties.ntaname)
-            .style("left", width/5 + 140 + "px")   
+          div.text(d.properties.ntaname + "  "+ prettyVar + ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
+            .style("left", width/5 + 200 + "px")   
             .style("top", height/30 + 53 + "px");
-          div.text(ntaNameToVar[d.properties.ntacode]) //this is still avg income only
-            .style("left", width/5 + 140 + "px")   
-            .style("top", height/30 + 53 + "px");
+         // div.text(ntaNameToVar[d.properties.ntacode]) //this is still avg income only
+         //   .style("left", width/5 + 140 + "px")   
+         //   .style("top", height/30 + 53 + "px");
         })          
         .on("mouseout", function(d) {   
           div.transition()    
@@ -264,6 +292,8 @@ const ntaNameToVar = {};
 
   buttons.on("change", function() {
     checked = true;
+    prettyVar = d3.event.target.value;
+    console.log(prettyVar);
     selectedVar = d3.event.target.id; //this is pulling the value, but then I need it to recognize as name of data
     console.log(selectedVar);
     updateFunction(selectedData, selectedVar); //this works to recall, but need to use selectedVar above!!

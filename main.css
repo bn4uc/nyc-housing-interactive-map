@@ -1,5 +1,6 @@
 body{align-items:center;display:flex;flex-direction:column}
 
+
 div.tooltip {	
     position: absolute;			
     text-align: center;			
