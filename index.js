@@ -157,6 +157,8 @@ const varScale = d3.scaleLinear().domain([0, varDomain.max]).range([0, 1]);
 
 const colorScale = d => d3.interpolateInferno(Math.sqrt(varScale(d))); //need to figure out how to make a legend for this
 
+var colorLegend = d3.scaleSequential(d3.interpolateInferno)
+  .domain([0, 20]);
 
 var projection = d3.geoAlbers()
             .scale(70000)
@@ -230,7 +232,8 @@ function showTooltip(d){ //this does not work to make both things show up
           div.transition()    
             .duration(200)    
             .style("opacity", .9);    
-          div.text(d.properties.ntaname)  //need to add the number for each of these ntaNameToVar[d.properties.ntacode])
+          div.text(d.properties.ntaname)
+          //.text(ntaNameToVar[d.properties.ntacode])  //need to add the number for each of these ntaNameToVar[d.properties.ntacode])
             .style("left", width/5 + 140 + "px")   
             .style("top", height/30 + 53 + "px") 
          // .style("left", (d3.event.pageX) + "px")   
@@ -251,8 +254,6 @@ function showTooltip(d){ //this does not work to make both things show up
     console.log(selectedData);
     updateFunction(selectedData); //maybe this is stored as a string and thus not triggering name of dataset
   }); 
-  // this is the first call to the update
- 
 
   var buttons = d3.select("#dimensions");
 
