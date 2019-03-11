@@ -123,13 +123,29 @@ hmda_nta_white_2015, hmda_nta_white_2016, hmda_nta_white_2017,
 hmda_nta_other_2013, hmda_nta_other_2014, 
 hmda_nta_other_2015, hmda_nta_other_2016, hmda_nta_other_2017
 ] = data;
+// const dataDict = data.reduce((acc, row))
+const dataDict = {
+ntaShapes, hmda_per_nta, 
+hmda_nta_general_2013, hmda_nta_general_2014, 
+hmda_nta_general_2015, hmda_nta_general_2016, hmda_nta_general_2017,
 
-//var dataDict = [{"varName": "General - 2013", "dataset": hmda_nta_general_2013}, {"varName": "General - 2014", "dataset": hmda_nta_general_2014}, 
-//{"varName": }] //do i need this to make selectedData access the actual data?? 
+hmda_nta_asian_2013, hmda_nta_asian_2014, 
+hmda_nta_asian_2015, hmda_nta_asian_2016, hmda_nta_asian_2017, 
+
+hmda_nta_black_2013, hmda_nta_black_2014, 
+hmda_nta_black_2015, hmda_nta_black_2016, hmda_nta_black_2017,
+
+hmda_nta_white_2013, hmda_nta_white_2014, 
+hmda_nta_white_2015, hmda_nta_white_2016, hmda_nta_white_2017,
+
+hmda_nta_other_2013, hmda_nta_other_2014, 
+hmda_nta_other_2015, hmda_nta_other_2016, hmda_nta_other_2017
+}
+
 
 var selectedData = hmda_nta_general_2013; //this is working --give it something to start with (should this be a csv)
 
-var selectedVar = 'avg_loan_amount' //this is needed, but doesnt update
+var selectedVar = 'avg_loan_amount'; //this is needed, but doesnt update
 
 var prettyVar = "Average Loan Amount";
 
@@ -176,11 +192,11 @@ const svg = d3.select('.vis-container')
       .style("text-anchor", "middle")
       .text("Visualizing HMDA Data in New York City");
 
-    svg.append("text")
-      .attr("y", height/30 + 50)
-      .attr("x", width/5 -100)             
-      .style("text-anchor", "right")
-      .text("Neighborhood Tabulation Area (NTA): ");
+    // svg.append("text")
+    //   .attr("y", height/30 + 50)
+    //   .attr("x", width/5 -100)             
+    //   .style("text-anchor", "right")
+    //   .text("Neighborhood Tabulation Area (NTA): ");
 
 
 
@@ -190,11 +206,11 @@ console.log(selectedData); //once changed this is just a name??? but when we hav
 
   function updateFunction(selectedData, selectedVar, prettyVar) {
 
-      svg.append("text")
-      .attr("y", height/30 + 80)
-      .attr("x", width/5 -100)             
-      .style("text-anchor", "right")
-      .text(prettyVar + ": ");
+      // svg.append("text")
+      // .attr("y", height/30 + 80)
+      // .attr("x", width/5 -100)             
+      // .style("text-anchor", "right")
+      // .text(prettyVar + ": ");
 
 const varDomain = computeDomain(selectedData, selectedVar); //this works with selectedVar and changes the domain, but the ntaNametoVar still uses avg_inc
 console.log(varDomain);
@@ -213,7 +229,7 @@ var svg2 = d3.select("svg");
 
 svg2.append("g")
   .attr("class", "legendLinear")
-  .attr("transform", "translate(110,150)");
+  .attr("transform", "translate(110,85)");
 
 var legend = d3.legendColor()
   .labelFormat(d3.format(".2f"))
@@ -262,7 +278,7 @@ console.log(selectedData); //this is updated, but just in name, not with the jso
 const ntaNameToVar = {}; 
   for (let i = 0; i < selectedData.length; i++){
         const row = selectedData[i];
-        ntaNameToVar[row.ntacode] = row.avg_loan_amount; //need to generalize but this doesnt work as selectedVar!!!!
+        ntaNameToVar[row.ntacode] = row[selectedVar]; //need to generalize but this doesnt work as selectedVar!!!!
       }
     console.log(ntaNameToVar);
 
@@ -279,9 +295,9 @@ const ntaNameToVar = {};
           div.transition()    
             .duration(200)    
             .style("opacity", .9);    
-          div.text(d.properties.ntaname + "  "+ prettyVar + ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
-            .style("left", width/5 + 200 + "px")   
-            .style("top", height/30 + 53 + "px");
+          div.text("Neighborhood Tabulation Area (NTA):  " + d.properties.ntaname + " ---"+ prettyVar +":  "+ ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
+            .style("left", width/5 + 100 + "px")   
+            .style("top", height/30 + 50 + "px");
          // div.text(ntaNameToVar[d.properties.ntacode]) //this is still avg income only
          //   .style("left", width/5 + 140 + "px")   
          //   .style("top", height/30 + 53 + "px");
@@ -299,7 +315,7 @@ const ntaNameToVar = {};
     prettyVar = d3.event.target.value;
     console.log(prettyVar);
     selectedVar = d3.event.target.id; //this is pulling the value, but then I need it to recognize as name of data
-    console.log(selectedVar);
+    console.log(selectedVar, dataDict[selectedData], selectedData);
     updateFunction(selectedData, selectedVar, prettyVar); //this works to recall, but need to use selectedVar above!!
      }); 
 
@@ -307,7 +323,7 @@ const ntaNameToVar = {};
 
   dropDown.on("change", function() {
     checked = true;
-    selectedData = d3.event.target.value; //this is pulling the value, but then I need it to recognize as name of data
+    selectedData = dataDict[d3.event.target.value]; //this is pulling the value, but then I need it to recognize as name of data
     console.log(selectedData);
     updateFunction(selectedData, selectedVar, prettyVar); //maybe this is stored as a string and thus not triggering name of dataset
   }); 
