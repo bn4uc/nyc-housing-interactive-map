@@ -2,7 +2,7 @@ console.log("Huuuu")
 
 //code altered from http://bl.ocks.org/feyderm/e6cab5931755897c2eb377ccbf9fdf18
 //and https://github.com/mcnuttandrew/capp-30239/tree/master/week-8-map/soln
-//and https://d3-legend.susielu.com/#color-examples
+//and uses https://d3-legend.susielu.com/#color-examples
 
 
 // Promise.all([
@@ -50,41 +50,6 @@ Promise.all([
       console.log("Error");
     });
 
-// Promise.all([
-//   'jsons_for_map/nta-clean.json', 
-//   'jsons_for_map/hmda_per_nta.json', 
-//   'jsons_for_map/hmda_nta_general_2013.json', 
-//   'jsons_for_map/hmda_nta_general_2014.json', 
-//   'jsons_for_map/hmda_nta_general_2015.json', 
-//   'jsons_for_map/hmda_nta_general_2016.json', 
-//   'jsons_for_map/hmda_nta_general_2017.json',
-//   'jsons_for_map/hmda_nta_asian_2013.json', 
-//   'jsons_for_map/hmda_nta_asian_2014.json', 
-//   'jsons_for_map/hmda_nta_asian_2015.json', 
-//   'jsons_for_map/hmda_nta_asian_2016.json', 
-//   'jsons_for_map/hmda_nta_asian_2017.json', 
-//   'jsons_for_map/hmda_nta_black_2013.json', 
-//   'jsons_for_map/hmda_nta_black_2014.json', 
-//   'jsons_for_map/hmda_nta_black_2015.json', 
-//   'jsons_for_map/hmda_nta_black_2016.json', 
-//   'jsons_for_map/hmda_nta_black_2017.json', 
-//   'jsons_for_map/hmda_nta_white_2013.json', 
-//   'jsons_for_map/hmda_nta_white_2014.json', 
-//   'jsons_for_map/hmda_nta_white_2015.json', 
-//   'jsons_for_map/hmda_nta_white_2016.json', 
-//   'jsons_for_map/hmda_nta_white_2017.json', 
-//   'jsons_for_map/hmda_nta_other_2013.json', 
-//   'jsons_for_map/hmda_nta_other_2014.json', 
-//   'jsons_for_map/hmda_nta_other_2015.json', 
-//   'jsons_for_map/hmda_nta_other_2016.json', 
-//   'jsons_for_map/hmda_nta_other_2017.json'
-//   ].map(url => fetch(url).then(data => data.json())))
-//     .then(data => myVis(data))
-//     .catch(function(error){
-//       console.log("Error");
-//     });
- 
-
 
 d3.csv("dropdown_options.csv").then(function(dataset) { //loading in the csv for the dropdown options
      console.log(dataset);
@@ -104,7 +69,7 @@ d3.csv("dropdown_options.csv").then(function(dataset) { //loading in the csv for
 
 
 
-function myVis(data) { //maybe this should be ntaShapes, and selectedData (but we must load it first)
+function myVis(data) { 
   
 
   var [ntaShapes, hmda_per_nta, 
@@ -123,7 +88,7 @@ hmda_nta_white_2015, hmda_nta_white_2016, hmda_nta_white_2017,
 hmda_nta_other_2013, hmda_nta_other_2014, 
 hmda_nta_other_2015, hmda_nta_other_2016, hmda_nta_other_2017
 ] = data;
-// const dataDict = data.reduce((acc, row))
+
 const dataDict = {
 ntaShapes, hmda_per_nta, 
 hmda_nta_general_2013, hmda_nta_general_2014, 
@@ -143,13 +108,13 @@ hmda_nta_other_2015, hmda_nta_other_2016, hmda_nta_other_2017
 }
 
 
-var selectedData = hmda_nta_general_2013; //this is working --give it something to start with (should this be a csv)
+var selectedData = hmda_nta_general_2013; 
 
-var selectedVar = 'avg_loan_amount'; //this is needed, but doesnt update
+var selectedVar = 'avg_loan_amount';
 
 var prettyVar = "Average Loan Amount";
 
-  var div = d3.select("body") //trying to create a tooltip! 
+  var div = d3.select("body") 
     .append("div") 
     .attr("class", "tooltip")       
     .style("opacity", 0);
@@ -164,7 +129,7 @@ var prettyVar = "Average Loan Amount";
   };
 
 function computeDomain(data, key) {
-  return data.reduce((acc, row) => { //this is where the dropdown update gets stuck because it isnt a dataset
+  return data.reduce((acc, row) => { 
     return {
       min: Math.min(acc.min, row[key]),
       max: Math.max(acc.max, row[key])
@@ -205,12 +170,6 @@ const svg = d3.select('.vis-container')
 console.log(selectedData); //once changed this is just a name??? but when we have the equals above, it treats it as data
 
   function updateFunction(selectedData, selectedVar, prettyVar) {
-
-      // svg.append("text")
-      // .attr("y", height/30 + 80)
-      // .attr("x", width/5 -100)             
-      // .style("text-anchor", "right")
-      // .text(prettyVar + ": ");
 
 const varDomain = computeDomain(selectedData, selectedVar); //this works with selectedVar and changes the domain, but the ntaNametoVar still uses avg_inc
 console.log(varDomain);
@@ -295,7 +254,7 @@ const ntaNameToVar = {};
           div.transition()    
             .duration(200)    
             .style("opacity", .9);    
-          div.text("Neighborhood Tabulation Area (NTA):  " + d.properties.ntaname + " ---"+ prettyVar +":  "+ ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
+          div.text("Neighborhood Tabulation Area (NTA):  " + d.properties.ntaname + " ----"+ prettyVar +":  "+ ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
             .style("left", width/5 + 100 + "px")   
             .style("top", height/30 + 50 + "px");
          // div.text(ntaNameToVar[d.properties.ntacode]) //this is still avg income only
