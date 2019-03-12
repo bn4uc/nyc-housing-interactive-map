@@ -255,7 +255,7 @@ const ntaNameToVar = {};
             .duration(200)    
             .style("opacity", .9);    
           div.text("Neighborhood Tabulation Area (NTA):  " + d.properties.ntaname + " ----"+ prettyVar +":  "+ ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
-            .style("left", width/5 + 100 + "px")   
+            .style("left", width/5 + 150 + "px")   
             .style("top", height/30 + 50 + "px");
          // div.text(ntaNameToVar[d.properties.ntacode]) //this is still avg income only
          //   .style("left", width/5 + 140 + "px")   
