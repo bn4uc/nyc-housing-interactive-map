@@ -11,10 +11,14 @@
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 </head>
 <body>
-  <svg class="vis-container"></svg>
+  
+  <svg id= "vis-container" class="vis-container"></svg>
+
+   <div id="legend1" style="display: inline-block"></div><!--  http://bl.ocks.org/syntagmatic/e8ccca52559796be775553b467593a9f -->
+
   <select id="dropdown"></select> <!--understanding of using dropdown and buttons from http://bl.ocks.org/feyderm/e6cab5931755897c2eb377ccbf9fdf18-->
   <div id = "tooltip"></div>
-  <div id="legend" style="display: inline-block"></div> <!--  http://bl.ocks.org/syntagmatic/e8ccca52559796be775553b467593a9f -->
+
 <form id="dimensions">
   <!--<input  type='radio' id="avg_inc" name="mode" checked>Average Income</input>-->
   <input type='radio' id="avg_loan_amount" name="mode" value = "Average Loan Amount"checked>Average Loan Amount</input>
@@ -22,6 +26,7 @@
   <input type='radio' id="approval_rate" name="mode" value = "Average Approval Rate">Approval Rate</input>
   <input type='radio' id="denial_rate" name="mode" value = "Average Denial Rate">Denial Rate</input>
 </form>
+
 </body>
 
 </html>

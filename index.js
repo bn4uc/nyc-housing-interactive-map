@@ -120,7 +120,7 @@ var prettyVar = "Average Loan Amount";
     .style("opacity", 0);
 
   const width = 1000;
-  const height = 800;
+  const height = 650;
   const margin = {
     top: 10,
     left: 10,
@@ -169,62 +169,106 @@ const svg = d3.select('.vis-container')
 
 console.log(selectedData); 
 
+
+
+
+
   function updateFunction(selectedData, selectedVar, prettyVar) {
 
 const varDomain = computeDomain(selectedData, selectedVar); 
-console.log('11111', selectedVar)
 console.log(varDomain);
 
 const varScale = d3.scaleLinear().domain([varDomain.min, varDomain.max]).range([0, 1]);
-console.log(varScale);
 
 const colorScale = d => d3.interpolateYlOrRd(Math.sqrt(varScale(d)));
-console.log(colorScale);
 
+///legend
+// var quantize = d3.scaleQuantize()
+//   .domain([ varDomain.min, varDomain.max])
+//   .range(d3.range(5)
+//     .map(function(i) { return "q" + i + "-9"; })); //what is this returning? the number splits? 
 
-  //color legend - won't show colors yet 
-//is this one better? with just one number? otherqise people might think the splits are weirder
-
-//   var svg2 = d3.select("svg");
+// var svg2 = d3.select("svg");
 
 // svg2.append("g")
-//   .attr("class", "legendLinear")
+//   .attr("class", "legendQuant")
 //   .attr("transform", "translate(110,85)");
 
 // var legend = d3.legendColor()
 //   .labelFormat(d3.format(".2f"))
 //   .useClass(true)
-//   .title("Color Legend") //how to get this to be the name of the button that is checked
+//   .title(prettyVar)
 //   .titleWidth(100)
-//   .scale(varScale); //need to use something here that has colors and numbers - colorScale should work but doesnt have numbers i think 
+//   .scale(quantize);
 
-// svg2.select(".legendLinear")
+// svg2.select(".legendQuant")
 //   .call(legend);
+///end legend
 
-var quantize = d3.scaleQuantize()
-  .domain([ varDomain.min, varDomain.max])
-  .range(d3.range(5)
-    .map(function(i) { return "q" + i + "-9"; })); //what is this returning? the number splits? 
+//testing new legend - from http://bl.ocks.org/syntagmatic/e8ccca52559796be775553b467593a9f
+ var colorScale1 = d3.scaleSequential(d3.interpolateYlOrRd)
+   .domain([varDomain.min, varDomain.max]);
 
+ continuous("#legend1", colorScale1);
 
-var svg2 = d3.select("svg");
+function continuous(selector_id, colorscale) {
+  var legendheight = 200,
+      legendwidth = 80,
+      margin = {top: 10, right: 60, bottom: 10, left: 2};
 
-svg2.append("g")
-  .attr("class", "legendQuant")
-  .attr("transform", "translate(110,85)");
+  var svg2 = d3.select(selector_id)
+    .style("height", legendheight + "px")
+    .style("width", legendwidth + "px")
+    .style("position", "relative")
+    .append("canvas")
+    .attr("height", legendheight - margin.top - margin.bottom)
+    .attr("width", 1)
+    .style("height", (legendheight - margin.top - margin.bottom) + "px")
+    .style("width", (legendwidth - margin.left - margin.right) + "px")
+    .style("border", "1px solid #000")
+    .style("position", "absolute")
+    .style("top", (margin.top) + "px")
+    .style("left", (margin.left) + "px")
+    .node();
 
-var legend = d3.legendColor()
-  .labelFormat(d3.format(".2f"))
-  .useClass(true)
-  .title(prettyVar)
-  .titleWidth(100)
-  .scale(quantize);
+  var ctx = svg2.getContext("2d");
 
-svg2.select(".legendQuant")
-  .call(legend);
+  var legendscale = d3.scaleLinear()
+    .range([1, legendheight - margin.top - margin.bottom])
+    .domain(colorscale.domain());
 
+  // image data hackery based on http://bl.ocks.org/mbostock/048d21cf747371b11884f75ad896e5a5
+  var image = ctx.createImageData(1, legendheight);
+  d3.range(legendheight).forEach(function(i) {
+    var c = d3.rgb(colorscale(legendscale.invert(i)));
+    image.data[4*i] = c.r;
+    image.data[4*i + 1] = c.g;
+    image.data[4*i + 2] = c.b;
+    image.data[4*i + 3] = 255;
+  });
+  ctx.putImageData(image, 0, 0);
 
-console.log(svg);
+  var legendaxis = d3.axisRight()
+    .scale(legendscale)
+    .tickSize(4)
+    .ticks(5);
+
+  var svg = d3.select(selector_id)
+    .append("svg")
+    .attr("height", (legendheight) + "px")
+    .attr("width", (legendwidth) + "px")
+    .style("position", "absolute")
+    .style("left", "0px")
+    .style("top", "0px")
+
+  svg
+    .append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(" + (legendwidth - margin.left - margin.right + 3) + "," + (margin.top) + ")")
+    .call(legendaxis);
+};
+
+//testing end 
 
 const join = svg.selectAll('.ntacode')
     .data(ntaShapes.features);
