@@ -119,7 +119,7 @@ var prettyVar = "Average Loan Amount";
     .attr("class", "tooltip")       
     .style("opacity", 0);
 
-  const width = 1000;
+  const width = 600;
   const height = 650;
   const margin = {
     top: 10,
@@ -210,6 +210,7 @@ const colorScale = d => d3.interpolateYlOrRd(Math.sqrt(varScale(d)));
    .domain([varDomain.min, varDomain.max]);
 
  continuous("#legend1", colorScale1);
+
 
 function continuous(selector_id, colorscale) {
   var legendheight = 200,
@@ -309,6 +310,10 @@ const ntaNameToVar = {};
    var buttons = d3.select("#dimensions");
 
   buttons.on("change", function() {
+    d3.select('#legend1')
+   .selectAll('svg')
+   .remove();
+   
     checked = true;
     prettyVar = d3.event.target.value;
     console.log(prettyVar);
