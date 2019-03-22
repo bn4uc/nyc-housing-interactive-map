@@ -17,7 +17,6 @@
 //   ]).then(combined => myVis(combined[0], combined[1])); 
 
 
-
 Promise.all([
   'data/nta-clean.json', 
   'data/hmda_per_nta.json', 
