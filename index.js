@@ -1,4 +1,4 @@
-console.log("Huuuu")
+
 
 //code altered from http://bl.ocks.org/feyderm/e6cab5931755897c2eb377ccbf9fdf18
 //and https://github.com/mcnuttandrew/capp-30239/tree/master/week-8-map/soln
@@ -128,13 +128,13 @@ var prettyVar = "Average Loan Amount";
     bottom: 10
   };
 
-function computeDomain(data, key) { //need to know what is going on in here
+function computeDomain(data, key) { 
   return data.reduce((acc, row) => { 
     if (!isFinite(row[key])) {
       return acc;
     }
     return {
-      min: Math.min(acc.min, row[key]), //something about this is not working for some vars/races/years
+      min: Math.min(acc.min, row[key]), 
       max: Math.max(acc.max, row[key])
     };
   }, {min: Infinity, max: -Infinity});
@@ -154,15 +154,9 @@ const svg = d3.select('.vis-container')
     .append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    svg.append("text")
-      .attr("y", height/50)
-      .attr("x", width/3 + 100)             
-      .style("text-anchor", "middle")
-      .text("Visualizing HMDA Data in New York City");
-
   svg.append("text")
-      .attr("y", height-100)
-      .attr("x", width - 400)             
+      .attr("y", height-50)
+      .attr("x", width -200)             
       .style("text-anchor", "middle")
       .text("Source: Home Mortgage Discolure Act Data, CFPB");
 
@@ -182,28 +176,6 @@ const varScale = d3.scaleLinear().domain([varDomain.min, varDomain.max]).range([
 
 const colorScale = d => d3.interpolateYlOrRd(Math.sqrt(varScale(d)));
 
-///legend
-// var quantize = d3.scaleQuantize()
-//   .domain([ varDomain.min, varDomain.max])
-//   .range(d3.range(5)
-//     .map(function(i) { return "q" + i + "-9"; })); //what is this returning? the number splits? 
-
-// var svg2 = d3.select("svg");
-
-// svg2.append("g")
-//   .attr("class", "legendQuant")
-//   .attr("transform", "translate(110,85)");
-
-// var legend = d3.legendColor()
-//   .labelFormat(d3.format(".2f"))
-//   .useClass(true)
-//   .title(prettyVar)
-//   .titleWidth(100)
-//   .scale(quantize);
-
-// svg2.select(".legendQuant")
-//   .call(legend);
-///end legend
 
 //testing new legend - from http://bl.ocks.org/syntagmatic/e8ccca52559796be775553b467593a9f
  var colorScale1 = d3.scaleSequential(d3.interpolateYlOrRd)
@@ -220,7 +192,7 @@ function continuous(selector_id, colorscale) {
   var svg2 = d3.select(selector_id)
     .style("height", legendheight + "px")
     .style("width", legendwidth + "px")
-    .style("position", "relative")
+    //.style("position", "relative")
     .append("canvas")
     .attr("height", legendheight - margin.top - margin.bottom)
     .attr("width", 1)
@@ -228,8 +200,8 @@ function continuous(selector_id, colorscale) {
     .style("width", (legendwidth - margin.left - margin.right) + "px")
     .style("border", "1px solid #000")
     .style("position", "absolute")
-    .style("top", (margin.top) + "px")
-    .style("left", (margin.left) + "px")
+    .style("top", 150 + "px") //this changes where the block of color goes 
+    .style("left", 230 + "px")
     .node();
 
   var ctx = svg2.getContext("2d");
@@ -259,8 +231,8 @@ function continuous(selector_id, colorscale) {
     .attr("height", (legendheight) + "px")
     .attr("width", (legendwidth) + "px")
     .style("position", "absolute")
-    .style("left", "0px")
-    .style("top", "0px")
+    .style("left", "230px") //this moves the axis
+    .style("top", "140px") //must be ten less than style top of the image block
 
   svg
     .append("g")
@@ -289,7 +261,7 @@ const ntaNameToVar = {};
     join.enter()
       .append('path')
       .attr('class', 'ntacode')
-      .attr('stroke', 'black')  //how to do like if na then fill = grey??
+      .attr('stroke', 'black') 
       .attr('d', d => geoGenerator(d))
       .merge(join)
         .attr('fill', d => colorScale(ntaNameToVar[d.properties.ntacode])) 
@@ -298,8 +270,8 @@ const ntaNameToVar = {};
             .duration(200)    
             .style("opacity", .9);    
           div.text("Neighborhood Tabulation Area (NTA):  " + d.properties.ntaname + " ----"+ prettyVar +":  "+ ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
-            .style("left", width/5 + 210 + "px")   
-            .style("top", height/30 + 50 + "px");
+            .style("left",310 + "px")   
+            .style("top", 150 + "px"); 
         })          
         .on("mouseout", function(d) {   
           div.transition()    
@@ -313,7 +285,7 @@ const ntaNameToVar = {};
     d3.select('#legend1')
    .selectAll('svg')
    .remove();
-   
+
     checked = true;
     prettyVar = d3.event.target.value;
     console.log(prettyVar);
@@ -325,6 +297,10 @@ const ntaNameToVar = {};
   var dropDown = d3.select("#dropdown");
 
   dropDown.on("change", function() {
+    d3.select('#legend1')
+   .selectAll('svg')
+   .remove();
+
     checked = true;
     selectedData = dataDict[d3.event.target.value]; 
     console.log(selectedData);

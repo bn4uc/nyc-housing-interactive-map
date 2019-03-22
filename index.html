@@ -10,19 +10,29 @@
   <script src="index.js"></script>
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 </head>
-<body>
-     <div id="legend1" style="display: inline-block" ></div><!--  http://bl.ocks.org/syntagmatic/e8ccca52559796be775553b467593a9f -->
-  <svg id= "vis-container" class="vis-container"></svg>
+<h1> Visualizing HMDA Data in New York City </h1>
+<h2> By Brianna Noonan </h2>
+<h3> Home Mortgage Disclosure Act Data includes mortgage applications and their outcomes, as well as applicant demographic information. This map displays a few variables for New York City by Neighborhood Tabulation Area (NTA) that can be visualized by race and year. <a href="https://bn4uc.github.io/nyc-housing-interactive-map/">Examine the code!</a></h3>
 
+<h4> Hover over neighborhoods and use buttons and dropdown to explore!</h4>
+
+<body>
   <select id="dropdown"></select> <!--understanding of using dropdown and buttons from http://bl.ocks.org/feyderm/e6cab5931755897c2eb377ccbf9fdf18-->
   <div id = "tooltip"></div>
 
-<form id="dimensions">
-  <!--<input  type='radio' id="avg_inc" name="mode" checked>Average Income</input>-->
+  <form id="dimensions">
+  
   <input type='radio' id="avg_loan_amount" name="mode" value = "Average Loan Amount"checked>Average Loan Amount</input>
   <input type='radio' id="avg_loan_to_inc" name= "mode" value = "Average Loan-to-Income Ratio">Average Loan-to-Income Ratio</input>
   <input type='radio' id="approval_rate" name="mode" value = "Average Approval Rate">Approval Rate</input>
   <input type='radio' id="denial_rate" name="mode" value = "Average Denial Rate">Denial Rate</input>
+  <input  type='radio' id="avg_inc" name="mode" value = "Average Applicant Income">Average Applicant Income</input>
+  
+  <svg id= "vis-container" class="vis-container"></svg>
+  
+  <div id="legend1" style="display: inline-block;" ></div><!--  http://bl.ocks.org/syntagmatic/e8ccca52559796be775553b467593a9f -->
+
+  
 </form>
 
 </body>
