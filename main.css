@@ -20,7 +20,4 @@ h3{font: 18px san-serif; height: 10px;}
 h4{font: 18px san serif; height: 10px;}
 a{font: 18px san-serif; height: 10px;}
 
-
-
-form.dimensions{
-margin: auto;}
+select.dropdown{margin-top:10px; margin-bottom: 10px;}

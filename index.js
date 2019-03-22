@@ -200,8 +200,8 @@ function continuous(selector_id, colorscale) {
     .style("width", (legendwidth - margin.left - margin.right) + "px")
     .style("border", "1px solid #000")
     .style("position", "absolute")
-    .style("top", 150 + "px") //this changes where the block of color goes 
-    .style("left", 230 + "px")
+    .style("top", height/2 -80  + "px") //this changes where the block of color goes 
+    .style("left", width/4 + 25 + "px")
     .node();
 
   var ctx = svg2.getContext("2d");
@@ -231,8 +231,8 @@ function continuous(selector_id, colorscale) {
     .attr("height", (legendheight) + "px")
     .attr("width", (legendwidth) + "px")
     .style("position", "absolute")
-    .style("left", "230px") //this moves the axis
-    .style("top", "140px") //must be ten less than style top of the image block
+    .style("left", width/4 + 25 + "px") //this moves the axis
+    .style("top", height/2 -90 +  "px") //must be ten less than style top of the image block
 
   svg
     .append("g")
@@ -271,7 +271,7 @@ const ntaNameToVar = {};
             .style("opacity", .9);    
           div.text("Neighborhood Tabulation Area (NTA):  " + d.properties.ntaname + " ----"+ prettyVar +":  "+ ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
             .style("left",310 + "px")   
-            .style("top", 150 + "px"); 
+            .style("top", height/2 -90 + "px"); 
         })          
         .on("mouseout", function(d) {   
           div.transition()    
