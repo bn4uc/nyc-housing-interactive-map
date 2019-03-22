@@ -120,7 +120,7 @@ var prettyVar = "Average Loan Amount";
     .style("opacity", 0);
 
   const width = 600;
-  const height = 650;
+  const height = 550;
   const margin = {
     top: 10,
     left: 10,
@@ -158,9 +158,6 @@ const svg = d3.select('.vis-container')
 console.log(selectedData); 
 
 
-
-
-
   function updateFunction(selectedData, selectedVar, prettyVar) {
 
 const varDomain = computeDomain(selectedData, selectedVar); 
@@ -186,7 +183,6 @@ function continuous(selector_id, colorscale) {
   var svg2 = d3.select(selector_id)
     .style("height", legendheight + "px")
     .style("width", legendwidth + "px")
-    //.style("position", "relative")
     .append("canvas")
     .attr("height", legendheight - margin.top - margin.bottom)
     .attr("width", 1)
@@ -194,8 +190,8 @@ function continuous(selector_id, colorscale) {
     .style("width", (legendwidth - margin.left - margin.right) + "px")
     .style("border", "1px solid #000")
     .style("position", "absolute")
-    .style("top", height/2 -80  + "px") //this changes where the block of color goes 
-    .style("left", width/4 + 25 + "px")
+    .style("top", 280  + "px") //this changes where the block of color goes 
+    .style("left", 200 + "px")
     .node();
 
   var ctx = svg2.getContext("2d");
@@ -204,7 +200,7 @@ function continuous(selector_id, colorscale) {
     .range([1, legendheight - margin.top - margin.bottom])
     .domain(colorscale.domain());
 
-  // image data hackery based on http://bl.ocks.org/mbostock/048d21cf747371b11884f75ad896e5a5
+  // image data hack based on http://bl.ocks.org/mbostock/048d21cf747371b11884f75ad896e5a5
   var image = ctx.createImageData(1, legendheight);
   d3.range(legendheight).forEach(function(i) {
     var c = d3.rgb(colorscale(legendscale.invert(i)));
@@ -225,8 +221,8 @@ function continuous(selector_id, colorscale) {
     .attr("height", (legendheight) + "px")
     .attr("width", (legendwidth) + "px")
     .style("position", "absolute")
-    .style("left", width/4 + 25 + "px") //this moves the axis
-    .style("top", height/2 -90 +  "px") //must be ten less than style top of the image block
+    .style("left", 200 + "px") //this moves the axis
+    .style("top", 270 +  "px") //must be ten less than style top of the image block
 
   svg
     .append("g")
@@ -263,8 +259,8 @@ const ntaNameToVar = {};
             .duration(200)    
             .style("opacity", .9);    
           div.text("Neighborhood Tabulation Area (NTA):  " + d.properties.ntaname + " ----"+ prettyVar +":  "+ ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
-            .style("left",310 + "px")   
-            .style("top", height/2 -80 + "px"); 
+            .style("left",310 + "px")   //location of the tooltip
+            .style("top", 280 + "px"); 
         })          
         .on("mouseout", function(d) {   
           div.transition()    
