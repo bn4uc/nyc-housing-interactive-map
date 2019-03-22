@@ -192,7 +192,7 @@ function continuous(selector_id, colorscale) {
     .style("width", (legendwidth - margin.left - margin.right) + "px")
     .style("border", "1px solid #000")
     .style("position", "absolute")
-    .style("top", 280  + "px") //this changes where the block of color goes 
+    .style("top", 340  + "px") //this changes where the block of color goes 
     .style("left", 200 + "px")
     .node();
 
@@ -224,7 +224,7 @@ function continuous(selector_id, colorscale) {
     .attr("width", (legendwidth) + "px")
     .style("position", "absolute")
     .style("left", 200 + "px") //this moves the axis
-    .style("top", 270 +  "px") //must be ten less than style top of the image block
+    .style("top", 330 +  "px") //must be ten less than style top of the image block
 
   svg
     .append("g")
@@ -262,7 +262,7 @@ const ntaNameToVar = {};
             .style("opacity", .9);    
           div.text("NTA:  " + d.properties.ntaname + " ----"+ prettyVar +":  "+ ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
             .style("left",310 + "px")   //location of the tooltip
-            .style("top", 280 + "px"); 
+            .style("top", 340 + "px"); 
         })          
         .on("mouseout", function(d) {   
           div.transition()    
