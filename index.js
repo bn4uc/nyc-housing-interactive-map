@@ -2,7 +2,7 @@
 
 //code altered from http://bl.ocks.org/feyderm/e6cab5931755897c2eb377ccbf9fdf18
 //and https://github.com/mcnuttandrew/capp-30239/tree/master/week-8-map/soln
-//and uses https://d3-legend.susielu.com/#color-examples
+//and uses http://bl.ocks.org/feyderm/e6cab5931755897c2eb377ccbf9fdf18 for creating legend
 
 
 // Promise.all([
@@ -51,9 +51,9 @@ Promise.all([
     });
 
 
-d3.csv("dropdown_options.csv").then(function(dataset) { //loading in the csv for the dropdown options
+d3.csv("dropdown_options.csv").then(function(dataset) {
      console.log(dataset);
-        d3.select("#dropdown") //adding each name and value to each option
+        d3.select("#dropdown")
           .selectAll("option")
           .data(dataset)
           .enter()
@@ -154,12 +154,6 @@ const svg = d3.select('.vis-container')
     .append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
 
-  svg.append("text")
-      .attr("y", height-50)
-      .attr("x", width -200)             
-      .style("text-anchor", "middle")
-      .text("Source: Home Mortgage Discolure Act Data, CFPB");
-
 
 console.log(selectedData); 
 
@@ -177,7 +171,7 @@ const varScale = d3.scaleLinear().domain([varDomain.min, varDomain.max]).range([
 const colorScale = d => d3.interpolateYlOrRd(Math.sqrt(varScale(d)));
 
 
-//testing new legend - from http://bl.ocks.org/syntagmatic/e8ccca52559796be775553b467593a9f
+//legend start- from http://bl.ocks.org/syntagmatic/e8ccca52559796be775553b467593a9f
  var colorScale1 = d3.scaleSequential(d3.interpolateYlOrRd)
    .domain([varDomain.min, varDomain.max]);
 
@@ -240,8 +234,7 @@ function continuous(selector_id, colorscale) {
     .attr("transform", "translate(" + (legendwidth - margin.left - margin.right + 3) + "," + (margin.top) + ")")
     .call(legendaxis);
 };
-
-//testing end 
+//legend end
 
 const join = svg.selectAll('.ntacode')
     .data(ntaShapes.features);
@@ -257,7 +250,7 @@ const ntaNameToVar = {};
     console.log(ntaNameToVar);
 
 
-    //THIS IS WORKING DO NOT TOUCH FIRST 6 lines  
+    //creation of map 
     join.enter()
       .append('path')
       .attr('class', 'ntacode')
@@ -271,7 +264,7 @@ const ntaNameToVar = {};
             .style("opacity", .9);    
           div.text("Neighborhood Tabulation Area (NTA):  " + d.properties.ntaname + " ----"+ prettyVar +":  "+ ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
             .style("left",310 + "px")   
-            .style("top", height/2 -90 + "px"); 
+            .style("top", height/2 -80 + "px"); 
         })          
         .on("mouseout", function(d) {   
           div.transition()    

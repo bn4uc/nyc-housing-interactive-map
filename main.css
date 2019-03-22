@@ -7,8 +7,7 @@ div.tooltip {
     width: 35px;					
     height: 40px;					
     padding: 2px;				
-    font: 16px san-serif;		
-    background: white;	
+    font: 16px san-serif;			
     border: 0px;		
     border-radius: 8px;			
     pointer-events: none;			
@@ -20,4 +19,9 @@ h3{font: 18px san-serif; height: 10px;}
 h4{font: 18px san serif; height: 10px;}
 a{font: 18px san-serif; height: 10px;}
 
-select.dropdown{margin-top:10px; margin-bottom: 10px;}
+select{margin-top:10px; margin-bottom: 10px;}
+
+input{margin-top:10px; margin-bottom: 10px;}
+path:hover {
+        stroke: #3182bd;
+        stroke-width: 3px;}
