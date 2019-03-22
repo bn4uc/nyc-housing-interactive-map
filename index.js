@@ -53,7 +53,6 @@ Promise.all([
 
 
 d3.csv("dropdown_options.csv").then(function(dataset) {
-     console.log(dataset);
         d3.select("#dropdown")
           .selectAll("option")
           .data(dataset)
@@ -156,13 +155,9 @@ const svg = d3.select('.vis-container')
     .attr('transform', `translate(${margin.left},${margin.top})`);
 
 
-console.log(selectedData); 
-
-
   function updateFunction(selectedData, selectedVar, prettyVar) {
 
 const varDomain = computeDomain(selectedData, selectedVar); 
-console.log(varDomain);
 
 const varScale = d3.scaleLinear().domain([varDomain.min, varDomain.max]).range([0, 1]);
 
@@ -236,15 +231,11 @@ function continuous(selector_id, colorscale) {
 const join = svg.selectAll('.ntacode')
     .data(ntaShapes.features);
   
-console.log(join, ntaShapes.features);
-
-console.log(selectedData); 
 const ntaNameToVar = {}; 
   for (let i = 0; i < selectedData.length; i++){
         const row = selectedData[i];
         ntaNameToVar[row.ntacode] = row[selectedVar]; 
-      }
-    console.log(ntaNameToVar);
+      };
 
 
     //creation of map 
@@ -278,9 +269,7 @@ const ntaNameToVar = {};
 
     checked = true;
     prettyVar = d3.event.target.value;
-    console.log(prettyVar);
     selectedVar = d3.event.target.id; 
-    console.log(selectedVar, dataDict[selectedData], selectedData);
     updateFunction(selectedData, selectedVar, prettyVar); 
      }); 
 
@@ -293,7 +282,6 @@ const ntaNameToVar = {};
 
     checked = true;
     selectedData = dataDict[d3.event.target.value]; 
-    console.log(selectedData);
     updateFunction(selectedData, selectedVar, prettyVar); 
   }); 
 
