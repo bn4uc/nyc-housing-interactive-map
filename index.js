@@ -1,8 +1,10 @@
 
+//Brianna Noonan - Data Vis Course 3/22/19
 
-//code altered from http://bl.ocks.org/feyderm/e6cab5931755897c2eb377ccbf9fdf18
-//and https://github.com/mcnuttandrew/capp-30239/tree/master/week-8-map/soln
-//and uses http://bl.ocks.org/feyderm/e6cab5931755897c2eb377ccbf9fdf18 for creating legend
+//Credits: 
+//http://bl.ocks.org/feyderm/e6cab5931755897c2eb377ccbf9fdf18
+//https://github.com/mcnuttandrew/capp-30239/tree/master/week-8-map/soln
+//http://bl.ocks.org/feyderm/e6cab5931755897c2eb377ccbf9fdf18 for creating legend
 
 
 // Promise.all([
@@ -258,7 +260,7 @@ const ntaNameToVar = {};
           div.transition()    
             .duration(200)    
             .style("opacity", .9);    
-          div.text("Neighborhood Tabulation Area (NTA):  " + d.properties.ntaname + " ----"+ prettyVar +":  "+ ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
+          div.text("NTA:  " + d.properties.ntaname + " ----"+ prettyVar +":  "+ ntaNameToVar[d.properties.ntacode]) //pretty var updates within function
             .style("left",310 + "px")   //location of the tooltip
             .style("top", 280 + "px"); 
         })          
