@@ -12,7 +12,7 @@
 </head>
 <h1> Visualizing HMDA Data in New York City </h1>
 <h2> By Brianna Noonan, 3/19 </h2>
-<h3> Homeownership is a crucial contributor to wealth, stability, and opportunity. The Home Mortgage Disclosure Act Data includes characteristics of mortgage applications, outcomes, and applicant demographic information. This map displays selected variables for New York City by Neighborhood Tabulation Area (NTA) for different races and years.</h3>
+<h3> Homeownership is a crucial contributor to wealth, stability, and opportunity. The Home Mortgage Disclosure Act Data includes characteristics of mortgage applications, outcomes, and applicant demographic information. This map displays the averages of selected variables  for different races and years within New York City by Neighborhood Tabulation Area (NTA).</h3>
 
 <h4> Hover over neighborhoods and use buttons and dropdown menu to explore!</h4>
 
@@ -23,11 +23,11 @@
 
   <form id="dimensions">
   
-  <input type='radio' id="avg_loan_amount" name="mode" value = "Average Loan Amount"checked>Average Loan Amount</input>
-  <input type='radio' id="avg_loan_to_inc" name= "mode" value = "Average Loan-to-Income Ratio">Average Loan-to-Income Ratio</input>
-  <input type='radio' id="approval_rate" name="mode" value = "Average Approval Rate">Approval Rate</input>
-  <input type='radio' id="denial_rate" name="mode" value = "Average Denial Rate">Denial Rate</input>
-  <input type='radio' id="avg_inc" name="mode" value = "Average Applicant Income">Average Applicant Income</input>
+  <input type='radio' id="avg_loan_amount" name="mode" value = "Average Loan Amount"checked>Loan Amount</input>
+  <input type='radio' id="avg_loan_to_inc" name= "mode" value = "Average Loan-to-Income Ratio">Loan-to-Income Ratio</input>
+  <input type='radio' id="approval_rate" name="mode" value = "Average Approval Rate">Loan Approval Rate</input>
+  <input type='radio' id="denial_rate" name="mode" value = "Average Denial Rate">Loan Denial Rate</input>
+  <input type='radio' id="avg_inc" name="mode" value = "Average Applicant Income">Applicant Income</input>
   </form>
   <svg id= "vis-container" class="vis-container"></svg>
   
